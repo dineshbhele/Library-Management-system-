@@ -1,0 +1,188 @@
+﻿@model POSModel.ResourceIssueModel
+    @using POSBLL
+@{
+    ViewBag.Title = "IssueIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 1;
+}
+
+<h2>IssueIndex</h2>
+
+<div class="title clearfix">
+    <h3>Resource Issue</h3>
+</div>
+
+<div class="clearfix"></div>
+
+<div id="pop-up-div" class="modal fade" role="dialog">
+</div>
+
+@using (Html.BeginForm("IssueIndex", "ResourceIssue", FormMethod.Post, new { id = "search-form" }))
+{
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-grop_padding">
+                    @Html.HiddenFor(x=>x.SubscriberId)
+
+                    @Html.LabelFor(model => model.ResourceId)
+                    @Html.DropDownListFor(x => x.ResourceId, ViewBag.ResourceList as SelectList, "Choose one", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ResourceId)
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-grop_padding">
+
+                    @Html.LabelFor(model => model.Author)
+                    @Html.DropDownListFor(x => x.AuthorId, ViewBag.Author as SelectList, "Choose one", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Author)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-grop_padding">
+
+                    @Html.LabelFor(model => model.PublicationId)
+                    @Html.DropDownListFor(x => x.PublicationId, ViewBag.Publisher as SelectList, "Choose one", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PublicationId)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-grop_padding">
+
+                    @Html.LabelFor(model => model.GradeNameEng)
+                    @Html.DropDownListFor(x => x.GradeId, ViewBag.GradeNameEng as SelectList, "Choose one", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.GradeNameEng)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-grop_padding">
+
+                    @Html.LabelFor(model => model.SubjectName)
+                    @Html.DropDownListFor(x => x.SubjectId, ViewBag.Subject as SelectList, "Choose one", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SubjectName)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-grop_padding margin-top-35">
+
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+}
+@if (Model.GetResourceIssueList != null)
+{
+
+    <div class="content-table">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="width-30">
+                            S.N.
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResourceCopyNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model=>model.IsAvailable)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.GetResourceIssueList)
+                    {
+                    <tr>
+                        <td>
+                            @counter
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResourceCopyNumber)
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(modelItem => item.IsAvailable, new { @disabled = "disabled" ,id="chk"} )
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(modelItem => item.IsActive, new { @disabled = "disabled" })
+                        </td>
+
+                        <td>
+
+                            <button class="btn btn-primary" onclick="IssueNew(@item.ResourceCopyId,@Model.SubscriberId)" id="check"> Issue</button>
+                        </td>
+
+                    </tr>
+                        counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<script>
+
+    function IssueNew(resCopyId , subId)
+    {
+       
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/ResourceIssue/CreateResourceIssue")',
+            data: { resourceCopyId: resCopyId , subscriberId: subId },
+            success: function (result) {
+                $('#check')
+               
+                $('#pop-up-div').html(result).modal({
+                    'show': true,
+                    'backdrop': 'static'
+                })
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+    $('#chk input:checkbox').change(function () {
+            $.ajax({
+                url: '@Url.Action("CreateResourceIssue","ResourceIssue")',
+                type: 'POST',
+                data: { chk: false }
+
+            });
+
+        })
+
+
+    // $('#IsAvailable').on('save', function () {
+    //     var chk = $('#IsAvailable').prop('checked');
+
+    //     if(chk==true)
+    //          chk.checked = false;
+    //     else
+    //          chk.checked = true;
+       
+    //})
+
+     $('.nepali-calendar').nepaliDatePicker({
+                npdMonth: true,
+                npdYear: true,
+            });
+</script>
+
+
+
+

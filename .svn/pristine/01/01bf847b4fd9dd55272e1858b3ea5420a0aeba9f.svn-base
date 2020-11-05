@@ -1,0 +1,183 @@
+﻿
+using POSModel;
+using PointOfSale.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Security;
+using WebMatrix.WebData;
+using POSBLL;
+using System.IO;
+using System.Text.RegularExpressions;
+
+namespace PointOfSale.Controllers
+{
+    [Authorize]
+    public class SetupController : Controller
+    {
+        ISetupService _iSetupService;
+        ReturnMessageModel rModel;
+        public SetupController()
+        {
+            _iSetupService = new SetupService();
+            rModel = new ReturnMessageModel();
+        }
+
+        //ConfigChoiceCategory
+        #region ConfigChoiceCategory
+        public ActionResult ConfigChoiceCategoryList()
+        {
+            ConfigChoiceCategoryModel cccModel = new ConfigChoiceCategoryModel();
+            cccModel.ConfigChoiceCategoryList = _iSetupService.GetConfigChoiceCategoryList();
+            return View(cccModel);
+        }
+
+        public ActionResult CreateEditConfigChoiceCategory(int? CategoryId)
+        {
+            ConfigChoiceCategoryModel cccModel = new ConfigChoiceCategoryModel();
+            if (CategoryId != null)
+            {
+                cccModel = _iSetupService.GetConfigChoiceCategoryList().Where(x => x.CategoryId == CategoryId).FirstOrDefault();
+            }
+            return PartialView("_CreateEditConfigChoiceCategory", cccModel);
+        }
+
+        [HttpPost]
+        public ActionResult CreateEditConfigChoiceCategory(ConfigChoiceCategoryModel cccModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _iSetupService.CreateEditConfigChoiceCategory(cccModel);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(rModel, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+
+        //ConfigChoice
+        #region ConfigChoice
+        public ActionResult ConfigChoiceList(int catId)
+        {
+            ConfigChoiceModel cccModel = new ConfigChoiceModel();
+            cccModel.ConfigChoiceList = _iSetupService.GetConfigChoiceList(catId);
+            cccModel.CategoryId = catId;
+            cccModel.CategoryName = CommonService.GetConfigChoiceCategoryById(catId).Category;
+            return View(cccModel);
+        }
+
+        public ActionResult CreateEditConfigChoice(int categoryId, int? choiceId)
+        {
+            ConfigChoiceModel cccModel = new ConfigChoiceModel();
+            if (choiceId != null)
+            {
+                cccModel = _iSetupService.GetConfigChoiceList(categoryId).Where(x => x.ChoiceId == choiceId).FirstOrDefault();
+            }
+            return PartialView("_CreateEditConfigChoice", cccModel);
+        }
+
+        [HttpPost]
+        public ActionResult CreateEditConfigChoice(ConfigChoiceModel cccModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _iSetupService.CreateEditConfigChoice(cccModel);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(rModel, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+
+       
+
+
+
+        //User Roles Section
+        #region
+        public ActionResult UserRolesIndex()
+        {
+            RoleModel roModel = new RoleModel();
+            roModel.RoleList = _iSetupService.GetRoleList();
+            return View(roModel);
+        }
+        public ActionResult CreateEditUserRoles(int? roleId)
+        {
+
+            RoleModel roModel = new RoleModel();
+            if (roleId != null)
+            {
+                roModel = _iSetupService.GetRoleList().Where(x => x.RoleId == roleId).FirstOrDefault();
+            }
+            return PartialView("_CreateEditRole", roModel);
+
+        }
+        [HttpPost]
+        public ActionResult CreateEditUserRoles(RoleModel roModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _iSetupService.CreateEditUserRoles(roModel);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(rModel, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        #endregion
+
+
+
+        #region Grade
+        public ActionResult GradeIndex()
+        {
+            GradeModel gModel = new GradeModel();
+            gModel.GradeList = _iSetupService.GetGradeList();
+
+            return View(gModel);
+        }
+
+        public ActionResult CreateGrade(int? gradeId)
+        {
+            GradeModel gModel = new GradeModel();
+            if (gradeId != null)
+            {
+                gModel = _iSetupService.GetGradeList().Where(x => x.Id == gradeId).FirstOrDefault();
+            }
+            return PartialView("_CreateGrade", gModel);
+        }
+
+        [HttpPost]
+        public ActionResult CreateGrade(GradeModel gModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _iSetupService.CreateGrade(gModel);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+
+            else
+            {
+                return Json(rModel, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        
+        #endregion
+
+
+
+
+    }
+
+    
+
+}

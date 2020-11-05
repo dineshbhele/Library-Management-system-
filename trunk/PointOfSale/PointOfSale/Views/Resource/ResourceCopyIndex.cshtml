@@ -1,0 +1,173 @@
+﻿@model POSModel.ResourceCopyModel
+    @using POSBLL
+
+@{
+    ViewBag.Title = "ResourceCopyIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 1;
+}
+
+<h2>ResourceCopyIndex</h2>
+
+
+<div class="title clearfix">
+    <h3>Resource Copy Index</h3>
+</div>
+@*<button id="AddGeneration" class="btn btn-add pull-right"><i class="fa fa-plus"></i> Add New</button>*@
+<div class="clearfix"></div>
+
+<div id="pop-up-div" class="modal fade" role="dialog">
+</div>
+<div class="content-table">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="width-30">
+                        S.N.
+                    </th>
+                    @*<th>
+                        @Html.HiddenFor(model => model.GenerationId)
+                    </th>*@
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResourceName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResourceCopyCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResourceCopyNumber)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remarks)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsAvailable)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PublishedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Edition)
+                    </th>
+                    <th>
+                        Issue
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.GetResourceCopiesList)
+                {
+                <tr>
+                    <td>
+                        @counter <a href="#" onclick="AddResourceCopy('@item.ResourceCopyId')"><i class="fa fa-edit"></i></a>
+                    </td>
+
+                    @*<td>
+                        @Html.HiddenFor(modelItem => item.GenerationId)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceCopyCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResourceCopyNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remarks)
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(modelItem => item.IsAvailable,new { @disabled="disabled"})
+                    </td>
+                    <td>
+                        @CommonService.GetCurrentNepaliDate(item.PublishedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Edition)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="GenerateIssueList(@item.ResourceCopyId)">Issue</button>
+                    </td>
+
+                </tr>
+                    counter++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+
+    $('#AddGeneration').on('click', function () {
+        GenerateIssueList();
+    });
+
+    @*function AddResourceGeneration(uniqueId)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/Resource/CreateResourceGeneration")',
+            data: { generationId: uniqueId },
+            success: function (result) {
+                $('#pop-up-div').html(result).modal({
+                    'show': true,
+                    'backdrop': 'static'
+                })
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    function AddResourceGeneration(uniqueId)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/Resource/ResourceCopyIndex")',
+            data: { generationId: uniqueId },
+            success: function (result) {
+                $('#pop-up-div').html(result).modal({
+                    'show': true,
+                    'backdrop': 'static'
+                })
+
+            },
+            error: function () {
+
+            }
+        });
+    }*@
+
+     function GenerateIssueList(ResourceCopyId) {
+         
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/ResourceIssue/ResourceIssueIndex")',
+            data: { ResourceCopyId: ResourceCopyId },
+            success: function (result) {
+                $('#pop-up-div').html(result).modal({
+                    'show': true,
+                    'backdrop': 'static'
+                })
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+
+</script>
+
+
+

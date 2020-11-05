@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace POSModel
+{
+    public class ResourcePublicationModel
+    {
+        public int PublicationId { get; set; }
+        public string Publisher { get; set; }
+        public int PublisherOrigin { get; set; }
+        public string Genere { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
+        public Nullable<DateTime> ModifiedDate { get; set; }
+        public Nullable<int> ModifiedBy { get; set; }
+        public string CountryName { get; set; }
+
+        public List<ResourcePublicationModel> ResourcePublicationList { get; set; }
+    }
+}

@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using POSBLL.Interface;
+using POSModel;
+using POSDAL;
+namespace POSBLL.Services
+{
+    public class ResourceService : IResourceInterface
+    {
+        public List<ResourceTypeModel> GetResourceTypeList()
+        {
+
+            using(PointOfSaleEntities context = new PointOfSaleEntities())
+            {
+                var result = context.ResourceTypes.Select(x => new ResourceTypeModel
+                {
+                    ResourceTypeId = x.ResourceTypeId,
+                    ResourcetypeName = x.ResourcetypeName,
+                    ResourceTypeCode = x.ResourceTypeCode,
+                    IsActive = x.IsActive,
+                    CreatedDate = x.CreatedDate,
+                    CreatedBy = x.CreatedBy,
+                    ModifiedDate = x.ModifiedDate,
+                    ModifiedBy = x.ModifiedBy
+
+                }).ToList();
+
+                return result;
+
+
+            }
+            
+        }
+    }
+}

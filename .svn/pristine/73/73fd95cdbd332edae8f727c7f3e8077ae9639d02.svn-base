@@ -1,0 +1,529 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PointOfSaleModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ConfigChoice">
+          <Key>
+            <PropertyRef Name="ChoiceId" />
+          </Key>
+          <Property Name="ChoiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="Choice" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ChoiceDescription" Type="varchar" MaxLength="50" />
+          <Property Name="ChoiceNepali" Type="nvarchar" MaxLength="500" />
+          <Property Name="Val" Type="varchar" MaxLength="500" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ConfigChoiceCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="CategoryNepali" Type="nvarchar" MaxLength="500" />
+          <Property Name="CategoryDescription" Type="varchar" MaxLength="500" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DateConversion_TblNepaliCalender">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YearID" Type="nvarchar" MaxLength="50" />
+          <Property Name="MonthID" Type="nvarchar" MaxLength="50" />
+          <Property Name="E_Start_Date" Type="datetime" />
+          <Property Name="E_End_Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GradeNameEng" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="GradeNameNep" Type="nvarchar" MaxLength="250" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="date" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="UpdatedDate" Type="date" />
+          <Property Name="UpdatedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="LastPasswordFailureDate" Type="datetime" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordChangedDate" Type="datetime" />
+          <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="webpages_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="ProviderUserId" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_UsersInRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ConfigChoice_ConfigChoiceCategory">
+          <End Role="ConfigChoiceCategory" Type="Self.ConfigChoiceCategory" Multiplicity="1" />
+          <End Role="ConfigChoice" Type="Self.ConfigChoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigChoiceCategory">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="ConfigChoice">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleId">
+          <End Role="webpages_Roles" Type="Self.webpages_Roles" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="Self.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="EnglishDateToNepali" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="englishDate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FuncEnglishDateToNepali" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="englishDate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FuncNepaliDateToEnglish" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="date">
+          <Parameter Name="nepaliDate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="NepaliDateToEnglish" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="nepaliDate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SpGetUserList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SpGetUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userRole" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="PointOfSaleModelStoreContainer">
+          <EntitySet Name="ConfigChoice" EntityType="Self.ConfigChoice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConfigChoiceCategory" EntityType="Self.ConfigChoiceCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DateConversion_TblNepaliCalender" EntityType="Self.DateConversion_TblNepaliCalender" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grade" EntityType="Self.Grade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_Membership" EntityType="Self.webpages_Membership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="Self.webpages_OAuthMembership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_Roles" EntityType="Self.webpages_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_UsersInRoles" EntityType="Self.webpages_UsersInRoles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ConfigChoice_ConfigChoiceCategory" Association="Self.FK_ConfigChoice_ConfigChoiceCategory">
+            <End Role="ConfigChoiceCategory" EntitySet="ConfigChoiceCategory" />
+            <End Role="ConfigChoice" EntitySet="ConfigChoice" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleId" Association="Self.fk_RoleId">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PointOfSaleModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PointOfSaleEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="EnglishDateToNepali" ReturnType="Collection(String)">
+          <Parameter Name="englishDate" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="NepaliDateToEnglish" ReturnType="Collection(DateTime)">
+          <Parameter Name="nepaliDate" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SpGetTransactionPayments" ReturnType="Collection(PointOfSaleModel.SpGetTransactionPayments_Result)">
+          <Parameter Name="transactionId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SpGetTransactions" ReturnType="Collection(PointOfSaleModel.SpGetTransactions_Result)">
+            <Parameter Name="fromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="toDate" Mode="In" Type="DateTime" />
+            <Parameter Name="transactionType" Mode="In" Type="Int32" />
+            <Parameter Name="party" Mode="In" Type="Int32" />
+            <Parameter Name="createdBy" Mode="In" Type="Int32" />
+            <Parameter Name="isActive" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="SpGetTransactionsLedger" ReturnType="Collection(PointOfSaleModel.SpGetTransactionsLedger_Result)">
+            <Parameter Name="fromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="toDate" Mode="In" Type="DateTime" />
+            <Parameter Name="transactionType" Mode="In" Type="Int32" />
+            <Parameter Name="party" Mode="In" Type="Int32" />
+            <Parameter Name="createdBy" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SpGetUserList" ReturnType="Collection(PointOfSaleModel.SpGetUserList_Result)" />
+          <FunctionImport Name="SpGetUsers" ReturnType="Collection(PointOfSaleModel.SpGetUsers_Result)">
+          <Parameter Name="userRole" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SpGetMonthWiseTransaction" />
+          <FunctionImport Name="SpGetStockLedger" ReturnType="Collection(PointOfSaleModel.SpGetStockLedger_Result)">
+            <Parameter Name="fromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="toDate" Mode="In" Type="DateTime" />
+            <Parameter Name="transactionType" Mode="In" Type="Int32" />
+            <Parameter Name="createdBy" Mode="In" Type="Int32" />
+            <Parameter Name="goodsId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="ConfigChoices" EntityType="PointOfSaleModel.ConfigChoice" />
+          <EntitySet Name="ConfigChoiceCategories" EntityType="PointOfSaleModel.ConfigChoiceCategory" />
+          <EntitySet Name="DateConversion_TblNepaliCalender" EntityType="PointOfSaleModel.DateConversion_TblNepaliCalender" />
+          <EntitySet Name="Grades" EntityType="PointOfSaleModel.Grade" />
+          <EntitySet Name="webpages_Membership" EntityType="PointOfSaleModel.webpages_Membership" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="PointOfSaleModel.webpages_OAuthMembership" />
+          <EntitySet Name="webpages_Roles" EntityType="PointOfSaleModel.webpages_Roles" />
+          <EntitySet Name="webpages_UsersInRoles" EntityType="PointOfSaleModel.webpages_UsersInRoles" />
+          <AssociationSet Name="FK_ConfigChoice_ConfigChoiceCategory" Association="PointOfSaleModel.FK_ConfigChoice_ConfigChoiceCategory">
+            <End Role="ConfigChoiceCategory" EntitySet="ConfigChoiceCategories" />
+            <End Role="ConfigChoice" EntitySet="ConfigChoices" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleId" Association="PointOfSaleModel.fk_RoleId">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+          </EntityContainer>
+        <ComplexType Name="SpGetTransactionPayments_Result">
+          <Property Type="Int32" Name="TransactionMasterID" Nullable="false" />
+          <Property Type="Int32" Name="PaymentId" Nullable="false" />
+          <Property Type="Decimal" Name="PaymentAmount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="PaymentType" Nullable="false" MaxLength="500" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="CreatedByName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="UpdateByName" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="PaymentDate" Nullable="false" />
+          <Property Type="String" Name="PaymentDateNepali" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" />
+          <Property Type="DateTime" Name="UpdatedDate" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SpGetTransactions_Result">
+          <Property Type="Int32" Name="TransactionMasterID" Nullable="false" />
+          <Property Type="DateTime" Name="TransactionDate" Nullable="false" />
+          <Property Type="String" Name="TransactionDateNepali" Nullable="true" MaxLength="20" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="TransactionType" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="PartyName" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="ContactPerson" Nullable="false" MaxLength="500" />
+          <Property Type="Decimal" Name="Amount" Nullable="true" Precision="38" Scale="4" />
+          <Property Type="String" Name="BilledBy" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="SpGetTransactionsLedger_Result">
+          <Property Type="Int32" Name="TransactionMasterID" Nullable="false" />
+          <Property Type="String" Name="TransactionDateNepali" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="TransactionDate" Nullable="false" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="TransactionType" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="DebitCredit" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="Particulars" Nullable="false" MaxLength="514" />
+          <Property Type="Decimal" Name="Amount" Nullable="false" Precision="38" Scale="4" />
+          <Property Type="String" Name="BilledBy" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SpGetUserList_Result">
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="56" />
+          <Property Type="String" Name="FullName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="MobileNumber" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="CanLogin" Nullable="true" />
+          <Property Type="Int32" Name="RoleId" Nullable="false" />
+          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" />
+        </ComplexType>
+        <ComplexType Name="SpGetUsers_Result">
+          <Property Type="Int32" Name="SelectId" Nullable="false" />
+          <Property Type="String" Name="selectText" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="SpGetStockLedger_Result">
+          <Property Type="Int32" Name="TransactionMasterID" Nullable="false" />
+          <Property Type="String" Name="TransactionDateNepali" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="TransactionDate" Nullable="false" Precision="23" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="String" Name="TransactionType" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="BillNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DebitCredit" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Particulars" Nullable="true" MaxLength="514" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="BilledBy" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="GoodsName" Nullable="false" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="ConfigChoice">
+          <Key>
+            <PropertyRef Name="ChoiceId" />
+          </Key>
+          <Property Name="ChoiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="Choice" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ChoiceDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChoiceNepali" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Val" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ConfigChoiceCategory" Relationship="PointOfSaleModel.FK_ConfigChoice_ConfigChoiceCategory" FromRole="ConfigChoice" ToRole="ConfigChoiceCategory" />
+        </EntityType>
+        <EntityType Name="ConfigChoiceCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CategoryNepali" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ConfigChoices" Relationship="PointOfSaleModel.FK_ConfigChoice_ConfigChoiceCategory" FromRole="ConfigChoiceCategory" ToRole="ConfigChoice" />
+        </EntityType>
+        <EntityType Name="DateConversion_TblNepaliCalender">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YearID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MonthID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="E_Start_Date" Type="DateTime" Precision="3" />
+          <Property Name="E_End_Date" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Grade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GradeNameEng" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="GradeNameNep" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="0" />
+          <Property Name="UpdatedBy" Type="Int32" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ConfirmationToken" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="LastPasswordFailureDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordChangedDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordVerificationToken" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="webpages_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderUserId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="webpages_UsersInRoles" Relationship="PointOfSaleModel.fk_RoleId" FromRole="webpages_Roles" ToRole="webpages_UsersInRoles" />
+        </EntityType>
+        <EntityType Name="webpages_UsersInRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="webpages_Roles" Relationship="PointOfSaleModel.fk_RoleId" FromRole="webpages_UsersInRoles" ToRole="webpages_Roles" />
+        </EntityType>
+        <Association Name="FK_ConfigChoice_ConfigChoiceCategory">
+          <End Type="PointOfSaleModel.ConfigChoiceCategory" Role="ConfigChoiceCategory" Multiplicity="1" />
+          <End Type="PointOfSaleModel.ConfigChoice" Role="ConfigChoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigChoiceCategory">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="ConfigChoice">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleId">
+          <End Type="PointOfSaleModel.webpages_Roles" Role="webpages_Roles" Multiplicity="1" />
+          <End Type="PointOfSaleModel.webpages_UsersInRoles" Role="webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PointOfSaleModelStoreContainer" CdmEntityContainer="PointOfSaleEntities">
+          <FunctionImportMapping FunctionImportName="EnglishDateToNepali" FunctionName="PointOfSaleModel.Store.EnglishDateToNepali" />
+          <FunctionImportMapping FunctionImportName="NepaliDateToEnglish" FunctionName="PointOfSaleModel.Store.NepaliDateToEnglish" />
+          <FunctionImportMapping FunctionImportName="SpGetUserList" FunctionName="PointOfSaleModel.Store.SpGetUserList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PointOfSaleModel.SpGetUserList_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="CanLogin" ColumnName="CanLogin" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SpGetUsers" FunctionName="PointOfSaleModel.Store.SpGetUsers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PointOfSaleModel.SpGetUsers_Result">
+                <ScalarProperty Name="SelectId" ColumnName="SelectId" />
+                <ScalarProperty Name="selectText" ColumnName="selectText" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="ConfigChoices">
+            <EntityTypeMapping TypeName="PointOfSaleModel.ConfigChoice">
+              <MappingFragment StoreEntitySet="ConfigChoice">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Val" ColumnName="Val" />
+                <ScalarProperty Name="ChoiceNepali" ColumnName="ChoiceNepali" />
+                <ScalarProperty Name="ChoiceDescription" ColumnName="ChoiceDescription" />
+                <ScalarProperty Name="Choice" ColumnName="Choice" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="ChoiceId" ColumnName="ChoiceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConfigChoiceCategories">
+            <EntityTypeMapping TypeName="PointOfSaleModel.ConfigChoiceCategory">
+              <MappingFragment StoreEntitySet="ConfigChoiceCategory">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CategoryDescription" ColumnName="CategoryDescription" />
+                <ScalarProperty Name="CategoryNepali" ColumnName="CategoryNepali" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DateConversion_TblNepaliCalender">
+            <EntityTypeMapping TypeName="PointOfSaleModel.DateConversion_TblNepaliCalender">
+              <MappingFragment StoreEntitySet="DateConversion_TblNepaliCalender">
+                <ScalarProperty Name="E_End_Date" ColumnName="E_End_Date" />
+                <ScalarProperty Name="E_Start_Date" ColumnName="E_Start_Date" />
+                <ScalarProperty Name="MonthID" ColumnName="MonthID" />
+                <ScalarProperty Name="YearID" ColumnName="YearID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grades">
+            <EntityTypeMapping TypeName="PointOfSaleModel.Grade">
+              <MappingFragment StoreEntitySet="Grade">
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="GradeNameNep" ColumnName="GradeNameNep" />
+                <ScalarProperty Name="GradeNameEng" ColumnName="GradeNameEng" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_Membership">
+            <EntityTypeMapping TypeName="PointOfSaleModel.webpages_Membership">
+              <MappingFragment StoreEntitySet="webpages_Membership">
+                <ScalarProperty Name="PasswordVerificationTokenExpirationDate" ColumnName="PasswordVerificationTokenExpirationDate" />
+                <ScalarProperty Name="PasswordVerificationToken" ColumnName="PasswordVerificationToken" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordChangedDate" ColumnName="PasswordChangedDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordFailuresSinceLastSuccess" ColumnName="PasswordFailuresSinceLastSuccess" />
+                <ScalarProperty Name="LastPasswordFailureDate" ColumnName="LastPasswordFailureDate" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="ConfirmationToken" ColumnName="ConfirmationToken" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_OAuthMembership">
+            <EntityTypeMapping TypeName="PointOfSaleModel.webpages_OAuthMembership">
+              <MappingFragment StoreEntitySet="webpages_OAuthMembership">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderUserId" ColumnName="ProviderUserId" />
+                <ScalarProperty Name="Provider" ColumnName="Provider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_Roles">
+            <EntityTypeMapping TypeName="PointOfSaleModel.webpages_Roles">
+              <MappingFragment StoreEntitySet="webpages_Roles">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_UsersInRoles">
+            <EntityTypeMapping TypeName="PointOfSaleModel.webpages_UsersInRoles">
+              <MappingFragment StoreEntitySet="webpages_UsersInRoles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

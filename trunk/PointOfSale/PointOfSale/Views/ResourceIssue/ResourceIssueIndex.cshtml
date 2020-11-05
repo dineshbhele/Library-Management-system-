@@ -1,0 +1,265 @@
+﻿@model POSModel.ResourceIssueModel
+@{
+    ViewBag.Title = "ResourceIssueIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 1;
+}
+
+<h2>ResourceIssueIndex</h2>
+
+
+<div class="title clearfix">
+    <h3>Resource Issue Index</h3>
+</div>
+
+@if (Model.SubscriberId > 0)
+{
+    <div id="add-new-div">
+        <button id="History" class="btn btn-add pull-right margin-right-60"><i class="fa fa-plus"></i> History</button>
+        <p class="space"></p>
+
+        <a href='@Url.Content("~/ResourceIssue/IssueIndex?SubscriberId="+Model.SubscriberId)' class="btn btn-add pull-right padding-right-20 margin-right-20"><i class="fa fa-plus"></i> New Issue</a>
+    </div>
+}
+
+@using (Html.BeginForm("ResourceIssueIndex", "ResourceIssue", FormMethod.Post, new { id = "search-form" }))
+{
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-grop_padding">
+
+                    @Html.LabelFor(model => model.SubscriberId)
+                    @*@Html.TextBoxFor(model => model.ResourceCopyId, new { @class = "form-control" })*@
+                    @Html.DropDownListFor(x => x.SubscriberId, ViewBag.FirstName as SelectList, "Choose one", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SubscriberId)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-grop_padding margin-top-35">
+
+                    <button class="btn btn-primary" type="submit" >Search</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}
+
+
+
+@if (Model.GetResourceIssueList != null)
+{
+    <div class="content-table">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="width-30">
+                            S.N.
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResourceCopyNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IssueDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ReturnBackDate)
+                        </th>
+
+                        <th>
+                            @Html.HiddenFor(model => model.ReturnedDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Remarks)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SubscriberId)
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.GetResourceIssueList)
+                    {
+                        <tr>
+                            <td>
+                                @counter <a href="#" onclick="AddEditIssue('@item.IssueId')"><i class="fa fa-edit"></i></a>
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ResourceCopyNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IssueDate, new { @class = "nepali-calendar" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReturnBackDate, new { @class = "nepali-calendar" })
+                            </td>
+
+                            <td>
+                                @Html.HiddenFor(modelItem => item.ReturnedDate, new { @class = "nepali-calendar" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remarks)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+
+
+                        </tr>
+                        counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+<script>
+    @*$('#AddIssue').on('click', function () {
+            AddIssue();
+        });
+
+        function AddIssue(uniqueId)
+        {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Content("~/ResourceIssue/IssueIndex")',
+                data: {  },
+                success: function (result) {
+                    $('#pop-up-div').html(result).modal({
+                        'show': true,
+                        'backdrop': 'static'
+                    })
+
+                },
+                error: function () {
+
+                }
+            });
+        }*@
+
+
+
+  
+</script>
+@*<div class="form-group">
+        <div class="row">
+
+        </div>
+
+    </div>
+            <button id="AddResourceIssue" class="btn btn-add pull-right"><i class="fa fa-plus"></i> Add New</button>
+            <div class="clearfix"></div>
+
+            <div id="pop-up-div" class="modal fade" role="dialog">
+            </div>
+            <div class="content-table">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th class="width-30">
+                                    S.N.
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ResourceCopyNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.IssueDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ReturnBackDate)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.ReturnedDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Remarks)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.subscriber)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.GetResourceIssueList)
+                            {
+                                <tr>
+                                    <td>
+                                        @counter <a href="#" onclick="AddEditIssue('@item.IssueId')"><i class="fa fa-edit"></i></a>
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ResourceCopyNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IssueDate, new { @class = "nepali-calendar" })
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ReturnBackDate, new { @class = "nepali-calendar" })
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ReturnedDate, new { @class = "nepali-calendar" })
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Remarks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                    </td>
+
+
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <script>
+
+
+        $('#AddResourceIssue').on('click', function () {
+            AddEditIssue();
+        });
+
+        function AddEditIssue(uniqueId)
+        {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Content("~/Resource/CreateEditResourceIssue")',
+                data: { issueId: uniqueId },
+                success: function (result) {
+                    $('#pop-up-div').html(result).modal({
+                        'show': true,
+                        'backdrop': 'static'
+                    })
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+            </script>*@
+
+

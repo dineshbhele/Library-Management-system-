@@ -1,0 +1,134 @@
+﻿@model POSModel.ResourceGenerationModel
+    @using POSBLL
+@{
+    ViewBag.Title = "ResourceGenerationIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int counter = 1;
+}
+
+
+
+<div class="title clearfix">
+    <h3>Resource Generation Index</h3>
+</div>
+@*<button id="AddGeneration" class="btn btn-add pull-right"><i class="fa fa-plus"></i> Add New</button>*@
+<div class="clearfix"></div>
+
+<div id="pop-up-div" class="modal fade" role="dialog">
+</div>
+<div class="content-table">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="width-30">
+                        S.N.
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResourceName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GenerationDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GenerationCopyCount)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remarks)
+                    </th>
+                    <th>
+                        View
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.GetResourceGenerationList)
+                {
+                    <tr>
+                        <td>
+                            @counter <a href="#" onclick="AddResourceGeneration('@item.GenerationId')"><i class="fa fa-edit"></i></a>
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResourceName)
+                        </td>
+                        <td>
+                            @CommonService.GetCurrentNepaliDate(item.GenerationDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GenerationCopyCount)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href='@Url.Content("~/Resource/ResourceCopyIndex?GenerationId="+item.GenerationId)'>View</a>
+                            @*<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ResourceCopyIndex", "Resource")'">View</button>*@
+                            @*<button type="button" class="btn btn-primary" onclick="GenerateCopiesList(@item.ResourceId)">View</button>*@
+                        </td>
+
+                    </tr>
+                    counter++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+
+    $('#AddGeneration').on('click', function () {
+        AddResourceGeneration();
+    });
+
+    function AddResourceGeneration(uniqueId)
+    {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/Resource/CreateResourceGeneration")',
+            data: { generationId: uniqueId },
+            success: function (result) {
+                $('#pop-up-div').html(result).modal({
+                    'show': true,
+                    'backdrop': 'static'
+                })
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+   function GenerateCopiesList(ResourceId) {
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("~/Resource/ResourceCopyIndex")',
+            data: { resourceId: resourceId },
+            success: function (result) {
+                $('#pop-up-div').html(result).modal({
+                    'show': true,
+                    'backdrop': 'static'
+                })
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+     $('.nepali-calendar').nepaliDatePicker({
+                npdMonth: true,
+                npdYear: true,
+            });
+
+
+</script>
+
+

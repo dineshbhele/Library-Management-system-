@@ -1,0 +1,55 @@
+﻿using POSModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using POSBLL.Interface;
+using POSBLL.Services;
+
+namespace PointOfSale.Controllers
+{
+    public class ResourceController : Controller
+    {
+        IResourceInterface _iResourceService;
+        ReturnMessageModel rModel;
+        public ResourceController()
+        {
+            _iResourceService = new ResourceService();
+            rModel = new ReturnMessageModel();
+        }
+
+        public ActionResult ResourceTypeIndex()
+        {
+            ResourceTypeModel db = new ResourceTypeModel();
+            db.ResourceTypeList = _iResourceService.GetResourceTypeList();
+
+            return View(db);
+        }
+
+        public ActionResult CreateEditResourceType(int? resourceTypeId)
+        {
+            ResourceTypeModel rtModel = new ResourceTypeModel();
+            if (resourceTypeId != null)
+            {
+                rtModel = _iResourceService.GetResourceTypeList().Where(x => x.ResourceTypeId == resourceTypeId).FirstOrDefault();
+            }
+            return PartialView("_CreateEditResourceType",rtModel);
+        }
+
+        [HttpPost]
+        public ActionResult CreateEditResourceType(ResourceTypeModel rtModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _iResourceService.CreateEditResourceType(rtModel);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(rModel, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+    }
+}

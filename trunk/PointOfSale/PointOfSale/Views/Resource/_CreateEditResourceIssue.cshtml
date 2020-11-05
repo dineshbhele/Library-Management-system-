@@ -1,0 +1,143 @@
+﻿@model POSModel.ResourceIssueModel
+
+@{
+    ViewBag.Title = "_CreateEditResourceIssue";
+}
+
+<h2>_CreateEditResourceIssue</h2>
+
+<style>
+    .datepicker {
+        z-index: 1151 !important;
+    }
+</style>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close" id="closeTop" data-dismiss="modal" aria-hidden="true">&times;</span>
+            <h4 class="modal-title">Grade</h4>
+        </div>
+        @using (Html.BeginForm("CreateEditResourceIssue", "Resource", FormMethod.Post, new { id = "resource-Issue-form" }))
+        {
+            <div class="modal-body">
+                <div class="content-box">
+                    @Html.HiddenFor(model => model.IssueId)
+
+
+                    @Html.ValidationSummary(true)
+                    <div class="form-group">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="form-grop_padding">
+
+                                    @Html.LabelFor(model => model.ResourceCopyId)
+                                    @Html.TextBoxFor(model => model.ResourceCopyId, new { @class = "form-control" })
+                                    @*@Html.DropDownListFor(x => x.ResourceCopyId, ViewBag.ResourceCopyNumber as SelectList, "Choose one", new {  @class = "form-control" })*@
+                                    @Html.ValidationMessageFor(model => model.ResourceCopyNumber)
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-grop_padding">
+
+                                    @Html.LabelFor(model => model.IssueDate)
+                                    @Html.TextBoxFor(model => model.IssueDate, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.IssueDate)
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-grop_padding">
+
+
+                                    @Html.LabelFor(model => model.ReturnBackDate)
+                                    @Html.TextBoxFor(x => x.ReturnBackDate)
+                                    @Html.ValidationMessageFor(model => model.ReturnBackDate)
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-grop_padding">
+
+
+                                    @Html.LabelFor(model => model.ReturnedDate)
+                                    @Html.TextBoxFor(model => model.ReturnedDate)
+                                    @Html.ValidationMessageFor(model => model.ReturnedDate)
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-grop_padding">
+
+                                    @Html.LabelFor(model => model.Remarks)
+                                    @Html.TextBoxFor(model => model.Remarks)
+                                    @Html.ValidationMessageFor(model => model.Remarks)
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-grop_padding">
+
+                                    @Html.LabelFor(model => model.Subscriber)
+                                    @Html.DropDownListFor(x => x.Subscriber, ViewBag.FirstName as SelectList, "Choose one", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Subscriber)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="btn-groups modal-footer">
+                @if (Model.IssueId == 0)
+                {
+
+                    <button type="submit" class="btn btn-primary btn-save"><i class="fa fa-save"></i> Save</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary btn-save"><i class="fa fa-save"></i> Save Change</button>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        $('#resource-Issue-form').ajaxForm({
+
+            beforeSubmit: function () {
+                $('#resource-Issue-form').removeData("validator").removeData("unobtrusiveValidation");
+                $.validator.unobtrusive.parse($('#resource-Issue-form'));
+                if ($("#resource-Issue-form").valid()) {
+                    WorkForce.loader.show();
+                } else {
+                    return false;
+                }
+            },
+            success: function (result) {
+                if (result.Success) {
+                    WorkForce.loader.hide();
+                    ShowMessage("success", "success", result.Msg);
+                    $('#pop-up-div').modal('hide');
+                    location.href = '@Url.Content("~/Resource/ResourceIssueIndex")';
+                } else {
+                    WorkForce.loader.hide();
+                    ShowMessage("error", "error", result.Msg);
+                }
+
+
+            },
+            error: function () {
+                WorkForce.loader.hide();
+                ShowMessage("error", "error", "error in calling ajax!!");
+            }
+
+        });
+    });
+</script>
+
+
